@@ -1,0 +1,29 @@
+{% extends 'charta_library/templates/base.html' %}
+
+{% block title %}
+Explore | Charta
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<h1>Explore Genres</h1>
+	<div id="genres_list">
+		{% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+			<p>{{ letter }}</p>
+			<div class="row">
+				{% for genre in genres %}
+					{% if genre.name|first == letter %}
+						<div class="col-md-4">
+							<div class="card mb-3">
+								<div class="card-body">
+									<a class="card-text nav-link" href="{% url 'explore_genre' genre.name  %}">{{ genre.name }}</a>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

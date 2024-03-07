@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container text-center my-2">
+    <h3>Genres</h3>
+    <div class="text-end">
+      <a href="{% url 'add_genre' %}">
+        <button type="button" class="btn bg-success-subtle border border-success rounded-3 text-end fw-bold">
+          <i class="bi bi-plus-lg"></i>
+        </button>
+      </a>
+    </div>
+  </div>
+
+  <div class="container" id="genres_list">
+    {% for genre in genres %}
+      <div class="row align-items-center my-3 py-2 m-0 shadow">
+        <div class="col-2 text-start">
+          <h6 class="card-title fw-bolder">{{ genre.name }}</h6>
+        </div>
+        <div class="col-md-8 col-sm-10">
+          <p>{{ genre.description }}</p>
+        </div>
+        <div class="col-md-2 col-sm-12 text-end ">
+          <a
+            class="btn bg-primary-subtle border border-primary rounded-3 pb-1"
+            href="{% url 'edit_genre' genre.id %}"
+          >
+            <i class="bi bi-pencil"></i>
+          </a>
+          <form method="POST" action="{% url 'manage_genres' %}" style="display: inline-block;">
+            {% csrf_token %}
+            <button name="delete" class="btn bg-danger-subtle border border-danger rounded-3 pb-1"
+                    onclick="return confirm('Are you sure you want to delete this genre?')" value="{{ genre.id }}">
+              <i class="bi bi-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% block title %} {% endblock%}</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'charta-favicon-black.png' %}">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+    crossorigin="anonymous"
+  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+
+
+</head>
+<body>
+<header>
+  <nav class="navbar bg-body-secondary">
+    <div class="container-fluid align-items-center mx-auto">
+      <a class="navbar-brand" href="{% url 'home' %}">
+        <img src="{% static 'logo-no-background.png' %}"
+             style="width: 100px;"
+             alt=""
+        >
+      </a>
+      <form class="form-inline d-flex col-6" method="GET" action="{% url 'search_results' %}">
+        <input class="form-control form-control-sm mr-3 w-75 rounded-start-pill" type="text" placeholder="Search"
+               aria-label="Search" name="q">
+        <span class="input-group-text red lighten-3 rounded-end-pill">
+          <i class="ps-2 bi bi-search" aria-hidden="true"></i>
+        </span>
+      </form>
+      <a class="nav-link" href="{% url 'explore' %}">
+        <i class="bi bi-compass text-secondary fw-bold"></i> Explore
+      </a>
+      <a class="nav-link" href="#">
+        <i class="bi bi-bookmark text-secondary fw-bold"></i> Saved
+      </a>
+      <a class="nav-link fs-2" href="#">
+        <i class="bi bi-person-circle text-secondary fw-bold"></i>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main class="mb-5">
+  {% block content %}
+
+  {% endblock %}
+</main>
+
+<footer class="bg-body-secondary text-center pt-2 mt-auto">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 mx-auto">
+        <h2 class="mb-3">
+          <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'logo-no-background.png' %}"
+                 style="width: 100px;"
+                 alt=""
+            >
+          </a>
+        </h2>
+        <p>&copy 2024 - Charta.</p>
+      </div>
+      <div class="col-lg-6 mx-auto">
+        <p class="mb-0">Connect with us</p>
+        <div class="social-links mt-2 text-secondary fs-3">
+          <a href="#" class="text-dark me-3"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-dark me-3"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-dark me-3"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-dark"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+  crossorigin="anonymous"
+></script>
+</body>
+</html>
