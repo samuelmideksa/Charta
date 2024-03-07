@@ -1,0 +1,46 @@
+{% extends 'charta_library/templates/base.html' %}
+
+{% block title %}
+  {{ author.name }} | Charta
+{% endblock %}
+
+{% block content %}
+  {% for book in books %}
+    <h1>{{ book.title }}</h1>
+    <p class="my-0 text-primary fw-semibold">
+      {% for author in book.authors.all %}
+        <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+           href="{% url 'author_details' author.id author.name %}">
+          {{ author.name }}
+        </a>
+        {% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+    <h5>About the book</h5>
+    <p>{{ book.plot }}</p>
+    <div class="row">
+      {% for genre in genres %}
+        <div class="col-md-4">
+          <div class="card mb-3">
+            <div class="card-body">
+              <a class="card-text nav-link" href="{% url 'explore_genre' genre.name  %}">{{ genre.name }}</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <table class="table table-borderless">
+      <tr>
+        <td>Language</td>
+        <td>Publisher</td>
+        <td>Release Date</td>
+      </tr>
+      <tr>
+        <td>{{ book.language }}</td>
+        <td>{{ book.publisher }}</td>
+        <td>{{ book.published_date}}</td>
+      </tr>
+    </table>
+  {% endfor %}
+{% endblock %}
