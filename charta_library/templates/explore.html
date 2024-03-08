@@ -16,7 +16,7 @@ Explore | Charta
 						<div class="col-md-4">
 							<div class="card mb-3">
 								<div class="card-body">
-									<a class="card-text nav-link" href="{% url 'explore_genre' genre.name  %}">{{ genre.name }}</a>
+									<a class="card-text nav-link" href="{% url 'explore_genre' genre.id genre.name|slugify  %}">{{ genre.name }}</a>
 								</div>
 							</div>
 						</div>
