@@ -1,46 +1,94 @@
 {% extends 'charta_library/templates/base.html' %}
 
 {% block title %}
-  {{ author.name }} | Charta
+{{ book.title }} | Charta
 {% endblock %}
 
 {% block content %}
-  {% for book in books %}
-    <h1>{{ book.title }}</h1>
-    <p class="my-0 text-primary fw-semibold">
-      {% for author in book.authors.all %}
-        <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-           href="{% url 'author_details' author.id author.name %}">
-          {{ author.name }}
+<div class="container row pt-5">
+  <div class="col-sm-12 col-lg-8">
+    <div class="mb-2 title">
+      <h1>{{ book.title }}</h1>
+      {% if book.series %}
+      <span class="fst-italic">Book {{ book.series_number }} of
+        <a href="{% url 'series_details' series_id book.series|slugify %}" class="link-dark">
+          {{ book.series }}
         </a>
-        {% if not forloop.last %}, {% endif %}
+      </span>
+      {% endif %}
+    </div>
+
+    <p class="my-0 text-primary fw-semibold text-dark">
+      By {% for author in book.authors.all %}
+      <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+         href="{% url 'author_details' author.id author.name|slugify %}">
+        {{ author.name }}
+      </a>
+      {% if not forloop.last %}, {% endif %}
       {% endfor %}
     </p>
-    <h5>About the book</h5>
-    <p>{{ book.plot }}</p>
+    <h5 class="my-3">About the book</h5>
+
+    <div id="plot-content">
+      <p>{{ book.plot | truncatewords:200 }}
+        {% if book.plot|wordcount > 200 %}
+        <span id="more-plot" style="display: none;">{{ book.plot }}</span>
+        <a class="link-dark link-offset-2"
+           href="#" id="show-more">Read More</a>
+        {% endif %}
+      </p>
+    </div>
+
     <div class="row">
-      {% for genre in genres %}
-        <div class="col-md-4">
-          <div class="card mb-3">
-            <div class="card-body">
-              <a class="card-text nav-link" href="{% url 'explore_genre' genre.name  %}">{{ genre.name }}</a>
-            </div>
+      {% for genre in book.genres.all %}
+      <div class="col-md-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <a class="card-text nav-link" href="{% url 'explore_genre' genre.id genre.name|slugify  %}">{{ genre }}</a>
           </div>
         </div>
+      </div>
       {% endfor %}
     </div>
 
     <table class="table table-borderless">
       <tr>
-        <td>Language</td>
+        {% if book.isbn %}
+        <td>Languages</td>
+        {% endif %}
         <td>Publisher</td>
         <td>Release Date</td>
+        {% if book.isbn %}
+        <td>ISBN</td>
+        {% endif %}
       </tr>
       <tr>
-        <td>{{ book.language }}</td>
+        {% if book.isbn %}
+        <td>{{ book.languages }}</td>
+        {% endif %}
         <td>{{ book.publisher }}</td>
         <td>{{ book.published_date}}</td>
+        {% if book.isbn %}
+        <td>{{ book.isbn }}</td>
+        {% endif %}
       </tr>
     </table>
-  {% endfor %}
+  </div>
+
+  <div class="card col-sm-12 col-lg-4 border-0 ms-2" style="width: 300px">
+    <img src="{{ book.cover_image.url}}" class="card-img-top img-fluid" style="height:400px; width: auto" alt="...">
+    <div class="card-body">
+      <a href="{{ book.book_file.url }}" class="btn btn-dark" style="width: 100%">Download</a>
+    </div>
+  </div>
+</div>
+
+<!--script for the book plot-->
+<script>
+    document.getElementById('show-more').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('more-plot').style.display = 'block';
+        this.style.display = 'none';
+    });
+</script>
 {% endblock %}

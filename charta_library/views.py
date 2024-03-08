@@ -26,27 +26,19 @@ def home(request):
     return render(request, 'home.html', context)
 
 
-def explore_genre(request, genre_name):
-    genre_name = genre_name.replace('-', ' ')
-    genre = models.Genre.objects.get(name=genre_name)
+def book_details(request, book_id, book_title):
+    book = models.Book.objects.get(pk=book_id)
+    series_id = None
+    if book.series:
+        series_id = book.series.id
+    return render(request, 'book_details.html', {'book': book, 'series_id': series_id})
 
-    all_books = models.Book.objects.filter(genres=genre)
-    one_week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-    recently_added_books = all_books.filter(added_date__lte=one_week_ago)
 
-    # Get all unique author ids from the books
-    author_ids = set()
-    for book in all_books:
-        author_ids.update(book.authors.all().values_list('id', flat=True))
+def series_details(request, series_id, series_title):
+    series = models.Series.objects.get(pk=series_id)
+    series_books = models.Book.objects.filter(series=series).order_by('series_number')
 
-    context = {
-        'genre': genre,
-        'all_books': all_books,
-        'recently_added_books': recently_added_books,
-        'author_ids': author_ids,  # Pass the author ids to the template
-    }
-
-    return render(request, 'explore_genre.html', context)
+    return render(request, 'series_details.html', {'series': series, 'series_books': series_books})
 
 
 def author_details(request, author_id, author_name):
@@ -66,9 +58,26 @@ def explore(request):
     return render(request, 'explore.html', {'genres': genres})
 
 
-def book_details(request, book_id):
-    books = models.Book.objects.get(pk=book_id)
-    return render(request, 'book_details.html', {'books': books})
+def explore_genre(request, genre_id, genre_name):
+    genre = models.Genre.objects.get(pk=genre_id)
+
+    all_books = models.Book.objects.filter(genres=genre)
+    one_week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+    recently_added_books = all_books.filter(added_date__lte=one_week_ago)
+
+    # Get all unique author ids from the books
+    author_ids = set()
+    for book in all_books:
+        author_ids.update(book.authors.all().values_list('id', flat=True))
+
+    context = {
+        'genre': genre,
+        'all_books': all_books,
+        'recently_added_books': recently_added_books,
+        'author_ids': author_ids,  # Pass the author ids to the template
+    }
+
+    return render(request, 'explore_genre.html', context)
 
 
 def search_results(request):
