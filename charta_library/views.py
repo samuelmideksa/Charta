@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from charta_management import models
 import datetime
 import random
 from django.db.models import Q
+from users import models as user_models
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def index(request):
@@ -27,11 +29,31 @@ def home(request):
 
 
 def book_details(request, book_id, book_title):
-    book = models.Book.objects.get(pk=book_id)
-    series_id = None
-    if book.series:
-        series_id = book.series.id
-    return render(request, 'book_details.html', {'book': book, 'series_id': series_id})
+    book = get_object_or_404(models.Book, pk=book_id)
+    series_id = book.series.id if book.series else None
+
+    context = {'book': book, 'series_id': series_id}
+
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        review = request.POST.get('reviewText')
+
+        # Check if the user is logged in
+        if request.user.is_authenticated:
+            try:
+                user_book_review = user_models.UserReview.objects.get(user=request.user, book=book)
+            except ObjectDoesNotExist:
+                user_book_review = None
+
+            # Check if the user has not reviewed the book yet
+            if user_book_review is None:
+                user = request.user
+                # Create a new UserReview object
+                user_models.UserReview.objects.create(book=book, rating=rating, review=review, user=user)
+                # Redirect to the same page to avoid form resubmission on page refresh
+                return redirect('book_details', book_id=book_id, book_title=book_title)
+
+    return render(request, 'book_details.html', context)
 
 
 def series_details(request, series_id, series_title):
