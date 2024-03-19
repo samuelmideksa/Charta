@@ -13,31 +13,37 @@ Explore {{ genre.name }} | Charta
   </div>
 
   {% if recently_added_books %}
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 text-center my-3">
-      <a href="{% url 'book_details' book.id book.title|slugify %}" class="card-link"
-         style="text-decoration: none; color: black;">
-        <div class="card shadow border-0">
-          <img src="{{ book.cover_image.url }}" class="card-img-top pt-1 shadow img-fluid" alt="Book Cover"
-               style="width:auto; height: 200px; align-self: center">
-          <div class="card-body">
-            <h5 class="card-title">{{ book.title }}</h5>
-            <p>{{ book.published_date }}</p>
-            <div class="card-text">
-              <p class="my-0 text-primary fw-semibold">
-                {% for author in book.authors.all %}
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                   href="{% url 'author_details' author.id author.name|slugify %}"
-                >
-                  {{ author.name }}
-                </a>
-                {% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </p>
+  <div class="row py-2 m-1">
+    <h3>Recently added {{ genre.name }} books.</h3>
+    <div class="row">
+      {% for book in recently_added_books %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 text-center my-3">
+          <a href="" class="card-link"
+             style="text-decoration: none; color: black;">
+            <div class="card shadow border-0">
+              <img src="{{ book.cover_image.url }}" class="card-img-top pt-1 shadow img-fluid" alt="Book Cover"
+                   style="width:auto; height: 200px; align-self: center">
+              <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <div class="card-text">
+                  <p class="my-0 text-primary fw-semibold">
+                    {% for author in book.authors.all %}
+                    <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                       href="{% url 'author_details' author.id author.name|slugify %}"
+                    >
+                      {{ author.name }}
+                    </a>
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
-      </a>
+      {% endfor %}
     </div>
+  </div>
   {% endif %}
 
   <div class="row py-2 m-1">
@@ -45,7 +51,7 @@ Explore {{ genre.name }} | Charta
     <div class="row">
       {% for book in all_books %}
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 text-center my-3">
-          <a href="{% url 'book_details' book.id book.title|slugify %}" class="card-link"
+          <a href="" class="card-link"
              style="text-decoration: none; color: black;">
             <div class="card shadow border-0">
               <img src="{{ book.cover_image.url }}" class="card-img-top pt-1 shadow img-fluid" alt="Book Cover"
