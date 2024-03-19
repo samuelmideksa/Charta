@@ -1,4 +1,5 @@
-{% extends 'charta_library/templates/base.html' %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 {{ book.title }} | Charta
@@ -82,6 +83,71 @@
     </div>
   </div>
 </div>
+
+{% if not user_book_review %}
+<div class="container row pt-5" id="l{{ user_book_review }}">
+    <div class="col-md-6 text-start">
+        <h2>Leave a Review</h2>
+        <form id="userReviewForm" method="post">
+            {% csrf_token %}
+            <div class="rating">
+                <span class="star" data-rating="5">&#9733;</span>
+                <span class="star" data-rating="4">&#9733;</span>
+                <span class="star" data-rating="3">&#9733;</span>
+                <span class="star" data-rating="2">&#9733;</span>
+                <span class="star" data-rating="1">&#9733;</span>
+                <input type="hidden" name="rating" id="rating" value="5">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="reviewText">Review:</label>
+                <textarea class="form-control" id="reviewText" name="reviewText" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+<!--script for the rating form-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.star');
+
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.dataset.rating); // Convert to integer
+                document.getElementById('rating').value = rating;
+                stars.forEach(s => {
+                    if (parseInt(s.dataset.rating) <= rating) { // Compare with less than or equal to
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
+<style>
+  .rating {
+      unicode-bidi: bidi-override;
+      direction: rtl;
+  }
+  .star {
+      cursor: pointer;
+      display: inline-block;
+      font-size: 30px;
+      color: gray;
+  }
+  .star.active {
+      color: gold;
+  }
+</style>
+{% endif %}
+
 
 <!--script for the book plot-->
 <script>

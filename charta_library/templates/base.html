@@ -17,9 +17,9 @@
       /* Adjust the positioning of the collapse element */
       #mainu-collapse {
           position: fixed;
-          top: 65px; /* Adjust this value as needed to position it correctly */
-          right: 15px; /* Adjust this value as needed to position it correctly */
-          z-index: 1000; /* Ensure it appears above other content */
+          top: 65px;
+          right: 15px;
+          z-index: 1000;
       }
 
   </style>
@@ -29,7 +29,7 @@
 <body>
 <header>
   <nav class="navbar bg-body-secondary fixed-top mb-5">
-    <div class="container-fluid align-items-center mx-auto">
+    <div class="container-fluid align-items-center mx-auto px-5">
       <a class="navbar-brand" href="{% url 'home' %}">
         <img src="{% static 'logo-no-background.png' %}"
              style="width: 100px;"
@@ -46,9 +46,11 @@
       <a class="nav-link" href="{% url 'explore' %}">
         <i class="bi bi-compass text-secondary fw-bold"></i> Explore
       </a>
+      {% if user.is_authenticated %}
       <a class="nav-link" href="#">
         <i class="bi bi-bookmark text-secondary fw-bold"></i> Saved
       </a>
+      {% endif %}
       <p class="d-inline-flex gap-1">
         <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#mainu-collapse"
                 aria-expanded="true" aria-controls="mainu-collapse">
@@ -57,23 +59,35 @@
       </p>
       <div class="collapse hide" id="mainu-collapse" style="">
         <div class="card card-body">
+          {% if user.is_authenticated %}
           <ul class="list-group list-group-flush">
-            <li class="list-group-item mb-3 fs-2">Hello Sam!</li>
-            <a href="#" class="nav-link border-0">
-              <li class="list-group-item">
+            <li class="list-group-item mb-3 fs-2">Hello {{ user.username }}</li>
+            <li class="list-group-item">
+              <a href="#" class="nav-link border-0">
                 <i class="bi bi-bookmark text-secondary fw-bold"></i> Saved
-              </li>
-            </a>
-            <a href="#" class="nav-link border-0">
-              <li class="list-group-item">Your Account</li>
-            </a>
-            <a href="#" class="nav-link border-0">
-              <li class="list-group-item">Public Profile</li>
-            </a>
-            <a href="#" class="nav-link border-0">
-              <li class="list-group-item">Sign out</li>
-            </a>
+              </a>
+            </li>
+            <li class="list-group-item">
+              <a href="#" class="nav-link border-0">Your Account</a>
+            </li>
+            <li class="list-group-item">
+              <a href="#" class="nav-link border-0">Public Profile</a>
+            </li>
+            <li class="list-group-item">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn nav-link border-0 text-start" type="submit">Log Out</button>
+                </form>
+            </li>
           </ul>
+          {% else %}
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item mb-3 fs-2">Wellcome to Charta!</li>
+            <li class="list-group-item">
+              <a href="{% url 'login' %}" class="nav-link border-0">Log In</a>
+            </li>
+          </ul>
+          {% endif %}
         </div>
       </div>
     </div>

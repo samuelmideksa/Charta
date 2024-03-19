@@ -57,7 +57,11 @@ ROOT_URLCONF = 'Charta.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [''],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'charta_library', 'templates'),
+            os.path.join(BASE_DIR, 'charta_management', 'templates'),
+            os.path.join(BASE_DIR, 'users', 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
